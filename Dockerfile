@@ -15,6 +15,13 @@ RUN apt-get update \
     && apt-get install -y php7.2-fpm \
     && rm -rf /var/lib/apt/lists/*
 
+RUN curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" \
+	&& echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c - \
+# upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
+	&& tar -xzf wordpress.tar.gz -C /var/www/html \
+	&& rm wordpress.tar.gz
+	#chown -R www-data:www-data /var/www/html
+
 RUN groupadd -r mysql && useradd -r -g mysql mysql
 
 RUN apt-get update && apt-get install -y --no-install-recommends gnupg dirmngr && rm -rf /var/lib/apt/lists/*
@@ -95,11 +102,5 @@ EXPOSE 80 443 3306 33060
 ENV WORDPRESS_VERSION 5.3.2
 ENV WORDPRESS_SHA1 fded476f112dbab14e3b5acddd2bcfa550e7b01b
 
-RUN curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" \
-	&& echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c - \
-# upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
-	&& tar -xzf wordpress.tar.gz -C /var/www/html \
-	&& rm wordpress.tar.gz
-	#chown -R www-data:www-data /var/www/html
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "mysqld", "daemon off;"]
