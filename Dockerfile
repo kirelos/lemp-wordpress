@@ -13,6 +13,7 @@ RUN apt-get update \
     && echo "deb https://packages.sury.org/php/ buster main" >> /etc/apt/sources.list.d/php.list \
     && apt-get update \
     && apt-get install -y php7.2-fpm \
+	&& rm /etc/apt/sources.list.d/php.list \
     && rm -rf /var/lib/apt/lists/*
 
 RUN wget -O wordpress.tar.gz "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" \
@@ -39,7 +40,6 @@ RUN set -x \
 	&& rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
 	&& gosu nobody true \
-	&& rm /etc/apt/sources.list.d/php.list \
 	&& apt-get purge -y --auto-remove ca-certificates wget
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
