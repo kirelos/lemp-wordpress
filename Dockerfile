@@ -32,6 +32,7 @@ RUN set -x \
 	&& rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
 	&& gosu nobody true \
+	&& rm /etc/apt/sources.list.d/php.list
 	&& apt-get purge -y --auto-remove ca-certificates wget
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
