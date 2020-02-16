@@ -15,7 +15,7 @@ RUN apt-get update \
     && apt-get install -y php7.2-fpm \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" \
+RUN wget -O wordpress.tar.gz "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" \
 	&& echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c - \
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 	&& tar -xzf wordpress.tar.gz -C /var/www/html \
