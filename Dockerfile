@@ -16,17 +16,6 @@ RUN apt-get update \
 	&& rm /etc/apt/sources.list.d/php.list \
     && rm -rf /var/lib/apt/lists/*
 
-ENV WORDPRESS_VERSION 5.3.2
-ENV WORDPRESS_SHA1 fded476f112dbab14e3b5acddd2bcfa550e7b01b
-VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
-
-RUN wget -O wordpress.tar.gz "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" \
-	&& echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -
-# upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
-RUN tar -xzf wordpress.tar.gz -C /var/www/html \
-	&& rm wordpress.tar.gz \
-	&& chown -R www-data:www-data /var/www/html
-
 RUN groupadd -r mysql && useradd -r -g mysql mysql
 
 RUN apt-get update && apt-get install -y --no-install-recommends gnupg dirmngr && rm -rf /var/lib/apt/lists/*
@@ -98,6 +87,17 @@ VOLUME /var/lib/mysql
 
 ENV php_conf /etc/php/7.2/fpm/php.ini
 RUN sed -i -e 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' ${php_conf}
+
+ENV WORDPRESS_VERSION 5.3.2
+ENV WORDPRESS_SHA1 fded476f112dbab14e3b5acddd2bcfa550e7b01b
+VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
+
+RUN wget -O wordpress.tar.gz "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" \
+	&& echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -
+# upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
+RUN tar -xzf wordpress.tar.gz -C /var/www/html \
+	&& rm wordpress.tar.gz \
+	&& chown -R www-data:www-data /var/www/html
 
 EXPOSE 80 443 3306 33060
 
