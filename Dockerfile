@@ -21,11 +21,11 @@ ENV WORDPRESS_SHA1 fded476f112dbab14e3b5acddd2bcfa550e7b01b
 VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
 
 RUN curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" \
-	&& echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c - \
+	&& echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
-	&& tar -xzf wordpress.tar.gz -C /var/www/html \
-	&& rm wordpress.tar.gz
-	#chown -R www-data:www-data /var/www/html
+RUN tar -xzf wordpress.tar.gz -C /var/www/html \
+	&& rm wordpress.tar.gz \
+	&& chown -R www-data:www-data /var/www/html
 
 RUN groupadd -r mysql && useradd -r -g mysql mysql
 
