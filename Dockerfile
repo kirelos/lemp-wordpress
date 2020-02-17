@@ -91,10 +91,10 @@ ENV WORDPRESS_VERSION 5.3.2
 ENV WORDPRESS_SHA1 fded476f112dbab14e3b5acddd2bcfa550e7b01b
 VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
 
-RUN wget -O wordpress.tar.gz "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" \
+RUN wget -O /var/www/wordpress.tar.gz "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" \
 	&& echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
-RUN tar -xzf wordpress.tar.gz -C /var/www/html \
+RUN tar -xzf /var/www/wordpress.tar.gz -C /var/www/html \
 	#&& rm wordpress.tar.gz \
 	&& chown -R www-data:www-data /var/www/html \
 	&& apt-get purge -y --auto-remove ca-certificates wget
