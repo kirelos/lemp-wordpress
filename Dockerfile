@@ -95,7 +95,7 @@ RUN wget -O wordpress.tar.gz "https://wordpress.org/wordpress-${WORDPRESS_VERSIO
 	&& echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 RUN tar -xzf wordpress.tar.gz -C /var/www/html \
-	&& rm wordpress.tar.gz \
+	#&& rm wordpress.tar.gz \
 	&& chown -R www-data:www-data /var/www/html \
 	&& apt-get purge -y --auto-remove ca-certificates wget
 
