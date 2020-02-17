@@ -32,8 +32,7 @@ RUN set -x \
 	&& gpgconf --kill all \
 	&& rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
-	&& gosu nobody true \
-	&& apt-get purge -y --auto-remove ca-certificates wget
+	&& gosu nobody true
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 # for MYSQL_RANDOM_ROOT_PASSWORD
@@ -97,7 +96,8 @@ RUN wget -O wordpress.tar.gz "https://wordpress.org/wordpress-${WORDPRESS_VERSIO
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 RUN tar -xzf wordpress.tar.gz -C /var/www/html \
 	&& rm wordpress.tar.gz \
-	&& chown -R www-data:www-data /var/www/html
+	&& chown -R www-data:www-data /var/www/html \
+	&& apt-get purge -y --auto-remove ca-certificates wget
 
 EXPOSE 80 443 3306 33060
 
