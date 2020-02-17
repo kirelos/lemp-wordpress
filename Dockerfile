@@ -102,4 +102,4 @@ RUN sed -i -e 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' ${php_conf}
 EXPOSE 80 443 3306 33060
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["nginx", "-g", "mysqld", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;", "mysqld"]
